@@ -3,6 +3,7 @@ import BackgroundCircles from "@/components/BackgroundCircles";
 import ContactSection from "@/components/ContactSection";
 import HeroSection from "@/components/HeroSection";
 import Loader from "@/components/Loader";
+import ProjectSlider from "@/components/ProjectSlider";
 import SocialIconList from "@/components/SocialIconList";
 import PublicLayout from "@/layout";
 import { AnimatePresence, motion } from "framer-motion";
@@ -49,6 +50,9 @@ export default function LandingPage() {
                 <div className="relative z-10">
                   <AboutMe />
                 </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <ProjectSlider />
               </div>
               <div className="md:px-20 lg:px-40 bottom-spacing">
                 <ContactSection />

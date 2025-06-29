@@ -19,7 +19,7 @@ const PublicLayout: FC<PublicLayoutProps> = ({
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content={"https://chandan-patnaik.vercel.app/og-image.png"}
+          content={""}
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

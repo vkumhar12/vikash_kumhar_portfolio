@@ -41,7 +41,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
             The Chapters of My Dev Life
           </h2>
           <p className="text-neutral-300 text-sm md:text-base max-w-md">
-            {`I've been working as React.js | Frontend developer for the over 1+ years. Here's a timeline
+            {`I've been working as React.js | Frontend developer for the over 2+ years. Here's a timeline
           of my journey.`}
           </p>
         </div>

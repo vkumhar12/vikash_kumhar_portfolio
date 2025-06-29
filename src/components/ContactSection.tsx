@@ -4,7 +4,7 @@ import ContactForm from "./ContactForm";
 const ContactSection = () => {
   return (
     <div
-      className="lg:px-10 px-10 md:py-12 flex flex-col gap-6 md:gap-8 w-full relative"
+      className="lg:px-10 px-10 md:py-12 flex flex-col gap-6 md:gap-16 w-full relative"
       id="contact"
     >
       <h1 className="md:text-5xl text-3xl lg:text-5xl font-bold text-gray-500">{`<Contact />`}</h1>

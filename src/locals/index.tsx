@@ -112,7 +112,7 @@ export const heroSectionIconsArray = [
   },
   {
     icon: <FaCss3 />,
-    title: "HTML",
+    title: "CSS",
   },
   {
     icon: <IoLogoJavascript />,
