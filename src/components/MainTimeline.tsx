@@ -1,112 +1,115 @@
 import { Timeline } from "@/components/ui/timeline";
 import { motion } from "framer-motion";
 
+const skillTag = "px-2 md:px-3 bg-cyan-700 dark:bg-cyan-800 py-1 rounded-full text-white text-xs md:text-[11px] font-mono";
+
 export function MainTimeline() {
-  const skillsFullTime = [
-    "Javascript",
-    "Typescript",
+  const seniorSkills = [
+    "JavaScript",
+    "TypeScript",
     "React",
     "Next.js",
     "Redux Toolkit",
     "Material UI",
     "Framer Motion",
   ];
-  const skills = [
-    "HTML",
-    "CSS",
-    "Javascript",
-    "Typescript",
+
+  const internSkills = [
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "TypeScript",
     "React",
-    "TailwindCss",
-    "ESTful APIs",
-    "Axois",
-    "Github",
+    "TailwindCSS",
+    "REST APIs",
+    "Axios",
+    "GitHub",
     "Responsive Design",
   ];
+
   const data = [
     {
-      title: "Dec 2023 - Aug 2024",
+      title: "Dec 2023 – Aug 2024",
       content: (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <motion.div
             viewport={{ once: true }}
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            exit={{ y: 20 }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h1 className="text-xl font-medium text-indigo-200">
-              React.js Developer - SearchingYard Group
-            </h1>
-            <p className="text-slate-300 text-xs md:text-sm font-normal">
-              {`With a deep expertise in ReactJS, NextJS, and TypeScript, I
-            specialize in crafting intuitive and high-performing frontend
-            applications. My journey spans across diverse sectors such as HRMS
-            platforms, CRM Platform and ERP Web Application.
-            where I’ve optimized user experience, collaborated on backend
-            integration, and ensured code quality while leading teams and
-            streamlining workflows.`}
+            <h3 className="text-lg font-semibold text-indigo-400 dark:text-indigo-300">
+              React.js Developer
+            </h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-mono mb-2">
+              SearchingYard Group
+            </p>
+            <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
+              Specialised in crafting intuitive, high-performing frontend
+              applications across HRMS, CRM, and ERP web platforms. Optimised
+              user experience, collaborated on backend integration, ensured code
+              quality, and streamlined team workflows.
             </p>
           </motion.div>
-          <div className="flex flex-wrap gap-2 md:gap-3 pt-2 md:pt-3">
-            {skillsFullTime.map((curSkill, i) => (
-              <motion.div
+          <div className="flex flex-wrap gap-2 pt-1">
+            {seniorSkills.map((skill, i) => (
+              <motion.span
+                key={skill}
                 viewport={{ once: true }}
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                exit={{ scale: 0 }}
-                key={curSkill}
-                className="px-2 md:px-3 bg-cyan-700 py-1 rounded-3xl text-white text-xs md:text-[12px]"
+                transition={{ duration: 0.25, delay: i * 0.07 }}
+                className={skillTag}
               >
-                {curSkill}
-              </motion.div>
+                {skill}
+              </motion.span>
             ))}
           </div>
         </div>
       ),
     },
     {
-      title: "May 2023 - Nov 2023",
+      title: "May 2023 – Nov 2023",
       content: (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <motion.div
             viewport={{ once: true }}
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            exit={{ y: 20 }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h1 className="text-xl font-medium text-indigo-200">
-              Frontend Developer - SearchingYard Group
-            </h1>
-            <p className="text-slate-300 text-xs md:text-sm font-normal">
-              Contributed significantly to the development and enhancement of
-              web applications across diverse projects, including an inventory
-              app, university CMS, and e-commerce platforms. Leveraged strong
-              proficiency in HTML5, CSS3, React, JavaScript, playing a key role
-              in improving functionality and performance during my internship.
+            <h3 className="text-lg font-semibold text-indigo-400 dark:text-indigo-300">
+              Frontend Developer (Intern)
+            </h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-mono mb-2">
+              SearchingYard Group
+            </p>
+            <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
+              Contributed to development and enhancement of web applications
+              across an inventory app, university CMS, and e-commerce platforms.
+              Played a key role in improving functionality and performance while
+              building a strong frontend foundation.
             </p>
           </motion.div>
-          <div className="flex flex-wrap gap-2 md:gap-3 pt-2 md:pt-3">
-            {skills.map((curSkill, i) => (
-              <motion.div
+          <div className="flex flex-wrap gap-2 pt-1">
+            {internSkills.map((skill, i) => (
+              <motion.span
+                key={skill}
                 viewport={{ once: true }}
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                exit={{ scale: 0 }}
-                key={curSkill}
-                className="px-2 md:px-3 bg-cyan-700 py-1 rounded-3xl text-white text-xs md:text-[12px]"
+                transition={{ duration: 0.25, delay: i * 0.07 }}
+                className={skillTag}
               >
-                {curSkill}
-              </motion.div>
+                {skill}
+              </motion.span>
             ))}
           </div>
         </div>
       ),
     },
   ];
+
   return (
     <div className="w-full top-spacing">
       <Timeline data={data} />

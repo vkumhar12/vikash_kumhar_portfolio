@@ -1,4 +1,4 @@
-// import { navigationData, socialIconList } from "@/locals";
+import ThemeToggle from "@/components/ThemeToggle";
 import { navigationData, socialIconList } from "@/locals";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -10,200 +10,178 @@ const Header = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [headerVisible, setHeaderVisible] = useState(true);
 
-  const handleLinkSession = (path: string) => {
-    push(path);
+  const scrollToSection = (path: string) => {
     setShowDrawer(false);
     document.body.style.overflow = "auto";
+
+    if (path.startsWith("#")) {
+      const el = document.querySelector(path);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else {
+      push(path);
+    }
   };
 
-  if (showDrawer) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
+  if (typeof document !== "undefined") {
+    document.body.style.overflow = showDrawer ? "hidden" : "auto";
   }
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollTop =
-        window.scrollY || document.documentElement.scrollTop;
-      if (currentScrollTop > lastScrollTop) {
-        setHeaderVisible(false);
-      } else {
-        setHeaderVisible(true);
-      }
-      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
+      const st = window.scrollY || document.documentElement.scrollTop;
+      setHeaderVisible(st <= lastScrollTop || st <= 60);
+      setLastScrollTop(st <= 0 ? 0 : st);
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
   return (
     <>
       <motion.header
-        initial={{ translateY: 0, opacity: 1 }}
-        animate={
-          headerVisible
-            ? { translateY: 0, opacity: 1 }
-            : { translateY: -100, opacity: 0 }
-        }
-        transition={{ duration: 0.4 }}
-        className={`fixed top-0 left-0 right-0 z-[301] bg-opacity-90 backdrop-blur-md text-white ${
-          showDrawer ? "bg-dark-slate backdrop-blur-md" : "bg-dark-blue/10"
-        }`}
+        initial={{ y: 0, opacity: 1 }}
+        animate={headerVisible ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}
+        transition={{ duration: 0.35, ease: "easeInOut" }}
+        className="fixed top-0 left-0 right-0 z-[301] backdrop-blur-md bg-white/80 dark:bg-[#131217]/90 border-b border-slate-200/50 dark:border-slate-700/30"
       >
-        <div className="flex justify-between items-center px-4 py-3 md:py-5 main-container">
-          <div
-            className="flex group items-center gap-2 text-lg w-fit hover:gap-5 common-transition hover:text-cyan-600"
+        <div className="flex justify-between items-center px-4 py-3 md:py-4 main-container">
+          {/* Logo */}
+          <button
+            className="flex group items-center gap-1.5 text-lg font-bold hover:text-cyan-600 dark:hover:text-cyan-400 text-slate-800 dark:text-white common-transition"
             onClick={() => push("/")}
+            aria-label="Home"
           >
-            <motion.p
-              initial={{ x: 20 }}
-              animate={!showDrawer ? { x: 0 } : { x: 10 }}
-              transition={{ duration: 0.3 }}
-            >
-              v
-            </motion.p>
-            <motion.p
-              initial={{ x: 40 }}
-              animate={!showDrawer ? { x: 0 } : { x: 20 }}
-              transition={{ duration: 0.4 }}
-            >
-              k
-            </motion.p>
-            <motion.p
-              initial={{ x: 60 }}
-              animate={!showDrawer ? { x: 0 } : { x: 30 }}
-              transition={{ duration: 0.5 }}
-            >
-              .
-            </motion.p>
+            {["v", "k", "."].map((char, i) => (
+              <motion.span
+                key={char + i}
+                initial={{ x: (i + 1) * 20 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 0.3 + i * 0.1 }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </button>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-6">
+            <ul className="flex items-center gap-6 text-sm">
+              {navigationData.map((item) =>
+                item.isOuterLink ? (
+                  <a href={item.link} key={item.label} target="_blank" rel="noopener noreferrer" download>
+                    <li className="tracking-wider text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 cursor-pointer common-transition">
+                      {item.label}
+                    </li>
+                  </a>
+                ) : (
+                  <li
+                    key={item.label}
+                    onClick={() => scrollToSection(item.link)}
+                    className="tracking-wider text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 cursor-pointer common-transition"
+                  >
+                    {item.label}
+                  </li>
+                )
+              )}
+            </ul>
+            <ThemeToggle />
           </div>
 
-          <motion.button
-            className="cursor-pointer md:hidden"
-            onClick={() => setShowDrawer(!showDrawer)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-6 h-6"
+          {/* Mobile: toggle + hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <ThemeToggle />
+            <motion.button
+              onClick={() => setShowDrawer(!showDrawer)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Toggle menu"
+              className="text-slate-800 dark:text-white"
             >
-              {showDrawer ? (
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.4 }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <motion.path
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              )}
-            </svg>
-          </motion.button>
-
-          <ul className="hidden md:flex items-center gap-8 text-sm">
-            {navigationData.map((curLabel, i) =>
-              curLabel.isOuterLink ? (
-                <a
-                  href={curLabel.link}
-                  key={curLabel.label}
-                  target="_blank"
-                  download={true}
-                >
-                  <li className="tracking-wider hover:text-cyan-600 text-white cursor-pointer common-transition">
-                    {curLabel.label}
-                  </li>
-                </a>
-              ) : (
-                <li
-                  onClick={() => handleLinkSession(curLabel.link)}
-                  key={curLabel.label}
-                  className="tracking-wider hover:text-cyan-600 cursor-pointer common-transition"
-                >
-                  {curLabel.label}
-                </li>
-              )
-            )}
-          </ul>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+                {showDrawer ? (
+                  <motion.path
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 0.3 }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <motion.path
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                )}
+              </svg>
+            </motion.button>
+          </div>
         </div>
       </motion.header>
 
+      {/* Mobile drawer */}
       <AnimatePresence>
         {showDrawer && (
           <motion.div
-            initial={{ translateY: "40vh", opacity: 0 }}
-            animate={{ translateY: 0, opacity: 1 }}
-            exit={{ translateY: "40vh", opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className={`fixed bottom-0 h-screen left-0 right-0 z-[300] bg-dark-slate bg-opacity-90 backdrop-blur-md text-white`}
+            initial={{ y: "100vh", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100vh", opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 z-[300] bg-white/95 dark:bg-[#131217]/97 backdrop-blur-xl"
           >
-            <div className="w-full h-full items-center justify-center">
-              <ul className="flex flex-col gap-6 w-full pl-10 h-full justify-center">
-                {navigationData.map((curLabel, i) => (
+            <div className="w-full h-full flex flex-col justify-center px-10">
+              <ul className="flex flex-col gap-7">
+                {navigationData.map((item, i) => (
                   <motion.li
-                    key={curLabel.label}
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.2 }}
-                    exit={{ opacity: 0, y: 100 }}
-                    className="w-fit flex justify-center flex-col"
+                    key={item.label}
+                    initial={{ opacity: 0, x: -40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 }}
+                    exit={{ opacity: 0, x: -40 }}
+                    className="w-fit"
                   >
-                    {curLabel.isOuterLink ? (
+                    {item.isOuterLink ? (
                       <a
-                        onClick={() => setShowDrawer(!showDrawer)}
-                        href={curLabel.link}
-                        download={true}
-                        className="w-fit text-4xl text-milk/60 common-transition"
+                        href={item.link}
+                        download
+                        onClick={() => setShowDrawer(false)}
+                        className="text-3xl font-semibold text-slate-800/60 dark:text-white/60 hover:text-cyan-600 dark:hover:text-cyan-400 common-transition"
                       >
-                        {curLabel.label}
+                        {item.label}
                       </a>
                     ) : (
-                      <span
-                        onClick={() => handleLinkSession(curLabel.link)}
-                        className="w-fit text-4xl text-milk/60 common-transition cursor-pointer"
+                      <button
+                        onClick={() => scrollToSection(item.link)}
+                        className="text-3xl font-semibold text-slate-800/60 dark:text-white/60 hover:text-cyan-600 dark:hover:text-cyan-400 common-transition"
                       >
-                        {curLabel.label}
-                      </span>
+                        {item.label}
+                      </button>
                     )}
                   </motion.li>
                 ))}
               </ul>
 
-              <div className="absolute bottom-10 left-8 w-full flex gap-4">
-                {socialIconList.map((curIcon, index) => (
+              <div className="absolute bottom-10 left-10 flex gap-5">
+                {socialIconList.map((icon, i) => (
                   <motion.a
-                    viewport={{ once: true }}
-                    initial={{ y: 40, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.4, delay: index * 0.3 }}
-                    exit={{ y: 40, opacity: 0 }}
-                    href={curIcon.link}
+                    key={i}
+                    href={icon.link}
                     target="_blank"
-                    key={index}
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
+                    className="text-2xl text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 common-transition"
                   >
-                    <div
-                      className={`text-2xl w-12 h-12 flex items-center justify-center common-transition text-milk/60`}
-                    >
-                      {curIcon.icon}
-                    </div>
+                    {icon.icon}
                   </motion.a>
                 ))}
               </div>
